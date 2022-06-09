@@ -1,6 +1,12 @@
-DROP DATABASE qna;
+DROP DATABASE If EXISTS qna;
 
 CREATE DATABASE qna;
+
+\c qna;
+
+DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS answers;
+DROP TABLE IF EXISTS questions;
 
 CREATE TABLE IF NOT EXISTS questions (
   id serial not null,
@@ -12,7 +18,7 @@ CREATE TABLE IF NOT EXISTS questions (
   reported boolean default false,
   helpful integer default 0,
   primary key (id)
-  );
+);
 
 CREATE TABLE IF NOT EXISTS answers (
   id serial not null,
@@ -42,11 +48,11 @@ CREATE TABLE IF NOT EXISTS photos (
 );
 
 -- importing csv data to PostgresDB
-copy questions from '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_data/questions.csv' delimiter ',' csv header;
+COPY questions FROM '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_files/questions.csv' delimiter ',' csv header;
 
-copy answers from '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_data/answers.csv' delimiter ',' csv header;
+COPY answers FROM '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_files/answers.csv' delimiter ',' csv header;
 
-copy photos from '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_data/answers_photos.csv' delimiter ',' csv header;
+COPY photos FROM '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_files/answers_photos.csv' delimiter ',' csv header;
 
 
 -- To run this file

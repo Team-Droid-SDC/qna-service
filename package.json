@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Team-Droid-SDC/qna-service#readme",
   "dependencies": {
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "fast-csv": "^4.3.6",
     "fs": "^0.0.1-security",
