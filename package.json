@@ -4,7 +4,8 @@
   "description": "Atelier qna service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,10 +18,12 @@
   },
   "homepage": "https://github.com/Team-Droid-SDC/qna-service#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "fast-csv": "^4.3.6",
     "fs": "^0.0.1-security",
+    "morgan": "^1.10.0",
     "pg": "^8.7.3"
   }
 }

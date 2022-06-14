@@ -1,32 +1,26 @@
+require('dotenv').config();
+// console.log(process.env);
+
 const { Pool } = require('pg')
-const pool = new Pool()
-module.exports = {
-  // query: (text, params, callback) => {
-  //   return pool.query(text, params, callback)
-  // }
-  async query(text, params) {
-    // invocation timestamp for the query method
-    const start = Date.now();
-    try {
-      const res = await pool.query(text, params);
-      // time elapsed since invocation to execution
-      const duration = Date.now() - start;
-      console.log(
-        'executed query',
-        {text, duration, rows: res.rowCount}
-      );
-      return res;
-    } catch (error) {
-      console.log('error in query', {text});
-      throw error;
-    }
-  }
-}
+const pool = new Pool({
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  port: process.env.DB_PORT,
+  database: process.env.DATABASE,
+  max: 20,
+  connectionTimeoutMillis: 0,
+  idleTimeoutMillis: 0
+});
 
+pool
+  .connect()
+  .then(() => console.log('PostgreSQL was Connected!'))
+  .catch((err) => console.log('Unexpected error', err))
 
-// text will be something like 'SELECT * FROM $1'
-// params something like this array: ['users'] i.e. the table name
-// params will be the dynamic elements of this query
-// $1 => replaced by users in final query
+pool
+  .query('SELECT NOW()')
+  .then(res => console.log(res.rows[0].now))
+  .catch(err => console.error('Error executing query', err.stack));
 
-// load file
+module.exports = pool;

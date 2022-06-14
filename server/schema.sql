@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS questions (
   id serial not null,
   product_id integer,
   question_body varchar(250),
-  question_date bigint,
+  question_date BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP),
   asker_name varchar(60),
   asker_email varchar(60),
   reported boolean default false,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS answers (
   id serial not null,
   question_id integer,
   body varchar(1000),
-  answer_date bigint,
+  answer_date BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP),
   answerer_name varchar(60),
   answerer_email varchar(60),
   reported boolean default false,
@@ -47,13 +47,28 @@ CREATE TABLE IF NOT EXISTS photos (
       on delete cascade
 );
 
--- importing csv data to PostgresDB
+-- ETL, importing csv data to PostgresDB
 COPY questions FROM '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_files/questions.csv' delimiter ',' csv header;
 
 COPY answers FROM '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_files/answers.csv' delimiter ',' csv header;
 
 COPY photos FROM '/Users/altravolta/Documents/Code/rfp2204/qna-service/csv_files/answers_photos.csv' delimiter ',' csv header;
 
+-- indexing for performance
+CREATE INDEX questions_product_id_idx
+ON questions (product_id);
+
+CREATE INDEX answers_question_id_idx
+ON answers (question_id);
+
+CREATE INDEX photos_answer_id_idx
+ON photos (answer_id);
+
+
+-- Updating all the primary keys for serial sequence
+SELECT setval(pg_get_serial_sequence('questions', 'id'), max(id)) FROM questions;
+SELECT setval(pg_get_serial_sequence('answers', 'id'), max(id)) FROM answers;
+SELECT setval(pg_get_serial_sequence('photos', 'id'), max(id)) FROM photos;
 
 -- To run this file
 -- psql postgres
