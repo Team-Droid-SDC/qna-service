@@ -102,7 +102,7 @@ module.exports = {
   },
 
   postAnswerDB(question_id, body, name, email, photos) {
-    console.log('inside ostQuestionDB')
+    console.log('inside postQuestionDB')
     const queryString = `
     with answer_post as(
       insert into
@@ -116,7 +116,7 @@ module.exports = {
       photos
         (answer_id, url)
       values
-        ((select id from answer_post), unnest('${photos}'::text[]))
+        ((select id from answer_post), unnest(array'${photos}'))
     `;
 
     return pool.query(queryString)

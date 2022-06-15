@@ -42,7 +42,7 @@ module.exports = {
   postAnswer: (req, res) => {
     const {question_id} = req.params;
     const {body, name, email, photos} = req.body;
-
+console.log('req.body', req.body)
     models.postAnswerDB(question_id, body, name, email, photos)
     .then((result) => {
       res.status(201).send()
