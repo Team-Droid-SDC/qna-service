@@ -24,6 +24,10 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+app.get(`/${process.env.LOADER_IO}/`, (req, res) => {
+  res.send(`${process.env.LOADER_IO}`)
+})
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });

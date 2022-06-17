@@ -8,14 +8,17 @@ const pool = new Pool({
   password: process.env.PASSWORD,
   port: process.env.DB_PORT,
   database: process.env.DATABASE,
-  max: 20,
+  // max: 20,
   connectionTimeoutMillis: 0,
   idleTimeoutMillis: 0
 });
 
 pool
   .connect()
-  .then(() => console.log('PostgreSQL was Connected!'))
+  .then(() => {
+    console.log('Host:', process.env.HOST)
+    console.log('PostgreSQL was Connected!');
+  })
   .catch((err) => console.log('Unexpected error', err))
 
 pool
