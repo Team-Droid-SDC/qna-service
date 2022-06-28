@@ -12,7 +12,7 @@ import { sleep } from 'k6';
 // }
 
 export let options = {
-  vus: 100, //stimulate how many virtual users
+  vus: 1000, //stimulate how many virtual users
   duration: "30s", //how long you want it to run
 };
 

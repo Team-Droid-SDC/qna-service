@@ -6,49 +6,50 @@ module.exports = {
     const queryString = `
     select row_to_json(question)
     from (
-      select product_id, (
+      select questions.product_id, (
         select json_agg(
           json_build_object(
-            'question_id', id,
-            'question_body', question_body,
-            'question_date', question_date,
-            'asker_name', asker_name,
-            'question_helpfulness', helpful,
-            'reported', reported,
+            'question_id', questions.id,
+            'question_body', questions.question_body,
+            'question_date', questions.question_date,
+            'asker_name', questions.asker_name,
+            'question_helpfulness', questions.helpful,
+            'reported', questions.reported,
             'answers', (
-              select json_object_agg(
-                id,
+              select coalesce(json_object_agg(
+                answers.id,
                 json_build_object(
-                  'id', id,
-                  'body', body,
-                  'date', answer_date,
-                  'answerer_name', answerer_name,
-                  'helpfulness', helpful,
+                  'id', answers.id,
+                  'body', answers.body,
+                  'date', answers.answer_date,
+                  'answerer_name', answers.answerer_name,
+                  'helpfulness', answers.helpful,
                   'photos', (
-                    select array(
-                      select url
+                    select coalesce(json_agg(row_to_json(photo)),'[]')
+                    from (
+                      select photos.id, photos.url
                       from photos
-                      where answer_id = answers.id
-                    )
+                      where photos.answer_id = answers.id
+                    ) as photo
                   )
                 )
-              )
+              ), '{}')
               from answers
-              where question_id = questions.id
+              where answers.question_id = questions.id
             )
           )
         )
         from questions
-        where product_id = $1 and reported = false
+        where questions.product_id = $1 and questions.reported = false
       ) as results
       from questions
-      where product_id = $1
+      where questions.product_id = $1
     )
-    question limit $2 offset $3`;
+    question limit $2 offset $3`
 
     const values = [product_id, count, count * page - count];
-    return pool
-      .query(queryString, values)
+
+    return pool.query(queryString, values)
   },
 
   getAnswersDB(question_id, page, count) {
