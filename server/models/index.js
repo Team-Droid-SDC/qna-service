@@ -4,52 +4,51 @@ module.exports = {
   getQuestionsDB(product_id, page, count) {
 
     const queryString = `
-    select row_to_json(question)
-    from (
-      select questions.product_id, (
-        select json_agg(
-          json_build_object(
-            'question_id', questions.id,
-            'question_body', questions.question_body,
-            'question_date', questions.question_date,
-            'asker_name', questions.asker_name,
-            'question_helpfulness', questions.helpful,
-            'reported', questions.reported,
-            'answers', (
-              select coalesce(json_object_agg(
-                answers.id,
-                json_build_object(
-                  'id', answers.id,
-                  'body', answers.body,
-                  'date', answers.answer_date,
-                  'answerer_name', answers.answerer_name,
-                  'helpfulness', answers.helpful,
-                  'photos', (
-                    select coalesce(json_agg(row_to_json(photo)),'[]')
-                    from (
-                      select photos.id, photos.url
-                      from photos
-                      where photos.answer_id = answers.id
-                    ) as photo
-                  )
+    select ${product_id} as product_id,
+      coalesce(json_agg(
+        json_build_object(
+          'question_id', q.id,
+          'question_body', q.question_body,
+          'question_date', q.question_date,
+          'asker_name', q.asker_name,
+          'question_helpfulness', q.helpful,
+          'reported', q.reported,
+          'answers', (
+            select coalesce(json_object_agg(
+              a.id,
+              json_build_object(
+                'id', a.id,
+                'body', a.body,
+                'date', a.answer_date,
+                'answerer_name', a.answerer_name,
+                'helpfulness', a.helpful,
+                'photos', (
+                  select coalesce(json_agg(
+                    json_build_object(
+                      'id', photos.id,
+                      'url', photos.url
+                    )
+                  ), '[]'::json)
+                  from photos
+                  where photos.answer_id = a.id
                 )
-              ), '{}')
-              from answers
-              where answers.question_id = questions.id
-            )
+              )
+            ), '{}'::json)
+            from
+            answers as a
+            where a.question_id = q.id and a.reported = false
           )
         )
-        from questions
-        where questions.product_id = $1 and questions.reported = false
-      ) as results
-      from questions
-      where questions.product_id = $1
-    )
-    question limit $2 offset $3`
+      ), '[]'::json) as results
+      from
+      questions as q
+      where q.product_id = $1 and q.reported = false
+      limit $2 offset $3;
+      `;
 
     const values = [product_id, count, count * page - count];
 
-    return pool.query(queryString, values)
+    return pool.query(queryString, values);
   },
 
   getAnswersDB(question_id, page, count) {

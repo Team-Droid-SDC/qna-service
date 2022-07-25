@@ -4,10 +4,12 @@ module.exports = {
 
   getQuestions: (req, res) => {
     const {product_id, page = 1, count = 5} = req.query;
-
+// console.log('inside controller questions')
     models.getQuestionsDB(product_id, page, count)
-      .then((result) => {
-        res.status(200).json(result.rows[0].row_to_json);
+      .then((results) => {
+        // console.log('controller result', results)
+        res.status(200).send(results.rows[0])
+        // res.status(200).json(result.rows[0].row_to_json);
       })
       .catch((err) => {
         res.status(500).send(err);
@@ -17,9 +19,10 @@ module.exports = {
   getAnswers: (req, res) => {
     const {question_id} = req.params;
     const {page = 1, count = 5} = req.query;
-
+    // console.log('inside controller questions')
     models.getAnswersDB(question_id, page, count)
       .then((result) => {
+        // console.log('result', result)
         res.status(200).json(result.rows[0].json_build_object);
       })
       .catch((err) => {
