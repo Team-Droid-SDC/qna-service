@@ -26,7 +26,7 @@ npm install
 ## End points
 ### List Questions
 #### GET /qa/questions
-- Retrieves a list of questions for a particular product. This list does not include any reported questions.
+> Retrieves a list of questions for a particular product. This list does not include any reported questions.
 
 ```
 {
@@ -83,7 +83,7 @@ npm install
 
 ### List Answers
 #### GET /qa/questions/:question_id/answers
-- Returns answers for a given question. This list does not include any reported answers.
+> Returns answers for a given question. This list does not include any reported answers.
 ```
 {
   "question": "1",
@@ -122,19 +122,19 @@ npm install
 
 ### Add a Question
 #### POST /qa/questions
-- Adds a question for the given product
+> Adds a question for the given product
 ### Add an Answer
 #### POST /qa/questions/:question_id/answers
-- Adds an answer for the given question
+> Adds an answer for the given question
 ### Mark Question as Helpful
 #### PUT /qa/questions/:question_id/helpful
-- Updates a question to show it was found helpful.
+> Updates a question to show it was found helpful.
 ### Report Question
 #### PUT /qa/questions/:question_id/report
-- Updates a question to show it was reported. Note, this action does not delete the question, but the question will not be returned in the above GET request.
+> Updates a question to show it was reported. Note, this action does not delete the question, but the question will not be returned in the above GET request.
 ### Mark Answer as Helpful
 #### PUT /qa/answers/:answer_id/helpful
-- Updates an answer to show it was found helpful.
+> Updates an answer to show it was found helpful.
 ### Report Answer
 #### PUT /qa/answers/:answer_id/report
-- Updates an answer to show it has been reported. Note, this action does not delete the answer, but the answer will not be returned in the above GET request.
+> Updates an answer to show it has been reported. Note, this action does not delete the answer, but the answer will not be returned in the above GET request.
