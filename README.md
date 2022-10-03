@@ -22,3 +22,19 @@ npm install
 ```
 ## Contributor
 - [Jongmyung Jeong](https://github.com/pqqrpr)
+
+## End points
+List Questions
+GET /qa/questions
+
+Retrieves a list of questions for a particular product. This list does not include any reported questions.
+
+Parameters
+
+Parameter	Type	Description
+product_id	integer	Specifies the product for which to retrieve
+page	integer	Selects the page of results to return. Default 1.
+count	integer	Specifies how many results per page to return. Default 5.
+Response
+
+Status: 200 OK
